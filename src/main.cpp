@@ -110,21 +110,23 @@ void loop() {
       lastMsg = now;
 
       float temperature = temp_event.temperature;
-
-      mqttClient.publish("outside/bme280/temperature", 1, false, String(temperature).c_str());
-
-      delay(500);
-
       float humidity = humidity_event.relative_humidity;
-      mqttClient.publish("outside/bme280/humidity", 1, false, String(humidity).c_str());
-
-      delay(500);
-
       float pressure = pressure_event.pressure * 0.750064;
-      mqttClient.publish("outside/bme280/pressure", 1, false, String(pressure).c_str());
+
+      if (temperature >= -40 && temperature <= 80 &&
+        humidity >= 0 && humidity <= 100 &&
+        pressure >= 700 && pressure <= 850) {
+        
+        mqttClient.publish("outside/bme280/temperature", 1, false, String(temperature).c_str());
+        delay(500);
+
+        mqttClient.publish("outside/bme280/humidity", 1, false, String(humidity).c_str());
+        delay(500);
+
+        mqttClient.publish("outside/bme280/pressure", 1, false, String(pressure).c_str());
+      }
 
       delay(1000);
-      
       
     }
   }
